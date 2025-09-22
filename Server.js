@@ -68,7 +68,7 @@ try {
   console.warn("⚠️ Email transporter not configured properly:", err.message);
 }
 
-async function sendMailSafe(to, subject, html) {
+async function sendMail(to, subject, html) {
   if (!transporter) {
     console.warn(`⚠️ Skipping email to ${to} - transporter not configured`);
     return;
