@@ -125,7 +125,7 @@ app.post("/api/enroll", async (req, res) => {
     );
 
     // Send emails safely
-    await sendMailSafe(
+    await sendMail(
       "deeplearneracademy@gmail.com",
       "📩 New Enrollment",
       `<h2>${name} enrolled in Course ID: ${courseId}</h2>
@@ -134,7 +134,7 @@ app.post("/api/enroll", async (req, res) => {
        <p>Status: ${status}</p>`
     );
 
-    await sendMailSafe(
+    await sendMail(
       email,
       "✅ Enrollment Successful",
       `<h2>Hi ${name},</h2>
