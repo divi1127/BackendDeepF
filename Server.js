@@ -400,6 +400,7 @@ const UPLOADS_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 app.use("/uploads", express.static(UPLOADS_DIR));
 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
@@ -653,6 +654,38 @@ app.post("/api/demo-request", async (req, res) => {
     res.status(500).json({ error: "Database insert failed" });
   }
 });
+
+app.post("/api/mentor-apply", upload.single("resume"), async (req, res) => {
+  const { name, email, experience, job_title } = req.body;
+
+  // Validation
+  if (!name || !email || !experience || !job_title)
+    return res.status(400).json({ success: false, message: "All fields are required." });
+  if (!req.file)
+    return res.status(400).json({ success: false, message: "Resume file is required." });
+
+  const resume = req.file.filename;
+
+  try {
+    // Insert data into DB
+    const [result] = await db.query(
+      "INSERT INTO mentor_applications (name, email, experience, resume, job_title) VALUES (?, ?, ?, ?, ?)",
+      [name, email, experience, resume, job_title]
+    );
+
+    // Send response
+    res.status(201).json({
+      success: true,
+      message: "Mentor application submitted successfully!",
+      id: result.insertId,
+      fileUrl: `/uploads/${resume}`,
+    });
+  } catch (err) {
+    console.error("❌ Mentor Application Error:", err);
+    res.status(500).json({ success: false, message: "Database error, please try again later." });
+  }
+});
+
 
 // ------------------ START SERVER ------------------
 const PORT = process.env.PORT || 5000;
