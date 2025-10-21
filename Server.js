@@ -590,22 +590,7 @@ app.post("/api/register", async (req, res) => {
 });
 
 // ------------------ MENTOR APPLY ------------------
-app.post("/api/mentor-apply", upload.single("resume"), async (req, res) => {
-  const { name, email, phone, expertise, experience, message } = req.body;
-  if (!req.file) return res.status(400).json({ success: false, message: "Resume is required" });
 
-  const resume = req.file.filename;
-  try {
-    const [result] = await db.query(
-      "INSERT INTO mentor_applications (name, email, phone, expertise, experience, message, resume) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [name, email, phone, expertise, experience, message, resume]
-    );
-    res.json({ success: true, id: result.insertId, fileUrl: `/uploads/${resume}` });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "DB insert failed" });
-  }
-});
 
 // ------------------ TESTIMONIALS ------------------
 app.get("/api/testimonials", async (req, res) => {
