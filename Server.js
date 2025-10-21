@@ -669,7 +669,7 @@ app.post("/api/mentor-apply", upload.single("resume"), async (req, res) => {
   try {
     // Insert data into DB
     const [result] = await db.query(
-      "INSERT INTO mentor_applications (name, email, experience, resume, job_title) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO mentor_applications1 (name, email, experience, resume, job_title) VALUES (?, ?, ?, ?, ?)",
       [name, email, experience, resume, job_title]
     );
 
